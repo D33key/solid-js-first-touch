@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js';
-import Button from '../button';
+import Button from '../ui/button';
 import Input from '../ui/Input';
 
 interface AddTodoProps {
