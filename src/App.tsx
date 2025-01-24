@@ -1,35 +1,33 @@
-import { createSignal } from 'solid-js'
-import solidLogo from './assets/solid.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createEffect, createSignal, For } from 'solid-js';
+import AddTodo from './components/Todo/AddTodo';
+import Title from './components/ui/Title';
+import TodoItem from './components/Todo/TodoItem';
 
 function App() {
-  const [count, setCount] = createSignal(0)
+	const [todoList, setTodoList] = createSignal<string[]>([]);
+	createEffect(() => {
+		console.log(todoList())
+	})
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <h1>Vite + Solid</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
-    </>
-  )
+	const setTodoListItem = (todoItem: string) =>
+		setTodoList((currentTodoList) => [...currentTodoList, todoItem]);
+
+	const removeTodoListItem = (todoItem: string) =>
+		setTodoList((currentTodoList) =>
+			currentTodoList.filter((item) => item !== todoItem),
+		);
+
+	return (
+		<div class='flex flex-col h-full w-full items-center mt-5 mb-5 gap-5'>
+			<Title>Todo List</Title>
+			<AddTodo setTodoListItem={setTodoListItem} />
+			<For each={todoList()} fallback={<p>Пока нет никаких заданий...</p>}>
+				{(todo) => (
+					<TodoItem text={todo} removeTodoListItem={removeTodoListItem} />
+				)}
+			</For>
+		</div>
+	);
 }
 
-export default App
+export default App;
